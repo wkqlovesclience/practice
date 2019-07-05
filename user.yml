@@ -1,0 +1,28 @@
+server:
+  port: 8888
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+spring:
+  application:
+    name: user
+
+feign:
+  hystrix:
+    enabled: true #开启feign断路器
+hystrix:
+  command:
+    default:  #default全局有效，service id指定应用有效
+      execution:
+        timeout:
+          #如果enabled设置为false，则请求超时交给ribbon控制,为true,则超时作为熔断根据
+          enabled: true
+        isolation:
+          thread:
+            timeoutInMilliseconds: 5000 #断路器超时时间，默认1000ms
+
+ribbon:
+  ReadTimeout: 3000 #设置Feign调用服务的超时时间
+  #注：如果调用服务超过ribbon的默认时间会自动触发hystrix 所以在测试时尽量在业务端设置线程等待时间尽可能短
